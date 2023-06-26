@@ -353,7 +353,7 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 	var dataTime uint64 = 0
 	for _, value := range dataArray {
 		t, ok := value.(map[string]interface{})
-		if ok && t["SystemCPUUsage"] != nil && t["EndMachAbsTime"]!=nil && t["EndMachAbsTime"].(uint64) > dataTime {
+		if ok && t["SystemCPUUsage"] != nil && t["EndMachAbsTime"] != nil && t["EndMachAbsTime"].(uint64) > dataTime {
 			systemInfo = t
 			dataTime = t["EndMachAbsTime"].(uint64)
 		}
@@ -388,6 +388,7 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 				Type:      "sys_cpu",
 				TimeStamp: timestamp,
 			},
+			CpuCoreNum: systemInfo["CPUCount"].(uint64),
 			NiceLoad:   sysCPUUsage["CPU_NiceLoad"].(float64),
 			SystemLoad: sysCPUUsage["CPU_SystemLoad"].(float64),
 			TotalLoad:  sysCPUUsage["CPU_TotalLoad"].(float64),
@@ -404,7 +405,10 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 	}
 
 	if c.options.SysMem {
-		kernelPageSize := int64(1) // why 16384 ?
+		// the unit is 16K, because the page size of iOS is 16K
+		// https://www.jianshu.com/p/dad9f27e412e
+		// https://blog.csdn.net/changcongcong_ios/article/details/119884385
+		kernelPageSize := int64(16384) // why 16384 ?
 		appMemory := (systemAttributesMap["vmIntPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
 		cachedFiles := (systemAttributesMap["vmExtPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
 		compressed := systemAttributesMap["vmCompressorPageCount"] * kernelPageSize
@@ -418,6 +422,7 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 				Type:      "sys_mem",
 				TimeStamp: timestamp,
 			},
+			TotalMemory: usedMemory + freeMemory,
 			AppMemory:   appMemory,
 			UsedMemory:  usedMemory,
 			WiredMemory: wiredMemory,
@@ -473,6 +478,7 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 
 type SystemCPUData struct {
 	PerfDataBase         // system cpu
+	CpuCoreNum   uint64  `json:"cpu_core"`
 	NiceLoad     float64 `json:"nice_load"`
 	SystemLoad   float64 `json:"system_load"`
 	TotalLoad    float64 `json:"total_load"`
@@ -481,6 +487,7 @@ type SystemCPUData struct {
 
 type SystemMemData struct {
 	PerfDataBase       // mem
+	TotalMemory  int64 `json:"total_memory"`
 	AppMemory    int64 `json:"app_memory"`
 	FreeMemory   int64 `json:"free_memory"`
 	UsedMemory   int64 `json:"used_memory"`
