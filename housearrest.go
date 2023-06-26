@@ -1,6 +1,6 @@
 package giDevice
 
-import "github.com/SonicCloudOrg/sonic-gidevice/pkg/libimobiledevice"
+import "github.com/Frank-Fiona/sonic-gidevice/pkg/libimobiledevice"
 
 var _ HouseArrest = (*houseArrest)(nil)
 

@@ -2,7 +2,7 @@ package giDevice
 
 import (
 	"fmt"
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/libimobiledevice"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/libimobiledevice"
 	"howett.net/plist"
 	"io"
 	"os"

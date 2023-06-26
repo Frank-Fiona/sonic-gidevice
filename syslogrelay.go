@@ -3,7 +3,7 @@ package giDevice
 import (
 	"bufio"
 	"fmt"
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/libimobiledevice"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/libimobiledevice"
 	"io"
 	"strings"
 )

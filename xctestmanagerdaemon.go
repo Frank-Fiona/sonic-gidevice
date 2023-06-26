@@ -2,8 +2,8 @@ package giDevice
 
 import (
 	"fmt"
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/libimobiledevice"
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/nskeyedarchiver"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/libimobiledevice"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/nskeyedarchiver"
 )
 
 var _ XCTestManagerDaemon = (*xcTestManagerDaemon)(nil)

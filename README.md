@@ -6,7 +6,7 @@
 ## Installation
 
 ```
-go get github.com/SonicCloudOrg/sonic-gidevice
+go get github.com/Frank-Fiona/sonic-gidevice
 ```
 
 

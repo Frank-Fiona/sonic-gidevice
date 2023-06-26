@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/libimobiledevice"
-	"github.com/SonicCloudOrg/sonic-gidevice/pkg/nskeyedarchiver"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/libimobiledevice"
+	"github.com/Frank-Fiona/sonic-gidevice/pkg/nskeyedarchiver"
 )
 
 type Usbmux interface {
