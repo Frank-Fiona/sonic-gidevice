@@ -408,28 +408,22 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 		// the unit is 16K, because the page size of iOS is 16K
 		// https://www.jianshu.com/p/dad9f27e412e
 		// https://blog.csdn.net/changcongcong_ios/article/details/119884385
-		kernelPageSize := int64(1) // why 16384 ?
-		appMemory := (systemAttributesMap["vmIntPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
-		cachedFiles := (systemAttributesMap["vmExtPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
-		compressed := systemAttributesMap["vmCompressorPageCount"] * kernelPageSize
-		usedMemory := (systemAttributesMap["vmUsedCount"] - systemAttributesMap["vmExtPageCount"]) * kernelPageSize
+		kernelPageSize := int64(16384) // why 16384 ?
+		usedMemory := systemAttributesMap["vmUsedCount"] * kernelPageSize
 		wiredMemory := systemAttributesMap["vmWireCount"] * kernelPageSize
-		swapUsed := systemAttributesMap["__vmSwapUsage"]
 		freeMemory := systemAttributesMap["vmFreeCount"] * kernelPageSize
+		purgeableMemory := systemAttributesMap["vmPurgeableCount"] * kernelPageSize
 
 		sysMemInfo := SystemMemData{
 			PerfDataBase: PerfDataBase{
 				Type:      "sys_mem",
 				TimeStamp: timestamp,
 			},
-			TotalMemory: usedMemory + freeMemory,
-			AppMemory:   appMemory,
-			UsedMemory:  usedMemory,
-			WiredMemory: wiredMemory,
-			FreeMemory:  freeMemory,
-			CachedFiles: cachedFiles,
-			Compressed:  compressed,
-			SwapUsed:    swapUsed,
+			TotalMemory:     usedMemory + freeMemory,
+			Purgeablememory: purgeableMemory,
+			UsedMemory:      usedMemory,
+			WiredMemory:     wiredMemory,
+			FreeMemory:      freeMemory,
 		}
 		memBytes, _ := json.Marshal(sysMemInfo)
 		c.chanSysMem <- memBytes
@@ -486,15 +480,12 @@ type SystemCPUData struct {
 }
 
 type SystemMemData struct {
-	PerfDataBase       // mem
-	TotalMemory  int64 `json:"total_memory"`
-	AppMemory    int64 `json:"app_memory"`
-	FreeMemory   int64 `json:"free_memory"`
-	UsedMemory   int64 `json:"used_memory"`
-	WiredMemory  int64 `json:"wired_memory"`
-	CachedFiles  int64 `json:"cached_files"`
-	Compressed   int64 `json:"compressed"`
-	SwapUsed     int64 `json:"swap_used"`
+	PerfDataBase          // mem
+	TotalMemory     int64 `json:"total_memory"`
+	FreeMemory      int64 `json:"free_memory"`
+	UsedMemory      int64 `json:"used_memory"`
+	WiredMemory     int64 `json:"wired_memory"`
+	Purgeablememory int64 `json:"purgeable_memory"`
 }
 
 type SystemDiskData struct {
