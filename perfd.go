@@ -408,7 +408,7 @@ func (c *perfdSysmontap) parseSystemData(dataArray []interface{}) {
 		// the unit is 16K, because the page size of iOS is 16K
 		// https://www.jianshu.com/p/dad9f27e412e
 		// https://blog.csdn.net/changcongcong_ios/article/details/119884385
-		kernelPageSize := int64(16384) // why 16384 ?
+		kernelPageSize := int64(1) // why 16384 ?
 		appMemory := (systemAttributesMap["vmIntPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
 		cachedFiles := (systemAttributesMap["vmExtPageCount"] - systemAttributesMap["vmPurgeableCount"]) * kernelPageSize
 		compressed := systemAttributesMap["vmCompressorPageCount"] * kernelPageSize
